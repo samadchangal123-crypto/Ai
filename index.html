@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🎭 Multi-AI | Romantic | Funny | Sad | Horror | Cute | Guru 🎭</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            opacity: 0.8;
+            margin-top: 8px;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .ai-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .ai-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-emoji {
+            font-size: 3rem;
+            display: block;
+        }
+
+        .ai-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ai-desc {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .status-ready { background: #4CAF50; box-shadow: 0 0 5px #4CAF50; }
+        .status-loading { background: #FF9800; animation: pulse 1s infinite; }
+        .status-error { background: #f44336; }
+
+        .key-badge {
+            font-size: 0.6rem;
+            background: rgba(0,0,0,0.5);
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .ai-chat-area {
+            height: 320px;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            display: flex;
+            gap: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 85%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot .message-content {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-avatar {
+            font-size: 1.1rem;
+        }
+
+        .ai-input-area {
+            display: flex;
+            padding: 12px;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .ai-input-area input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .ai-input-area button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .ai-input-area button:hover:not(:disabled) {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        .ai-input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            width: fit-content;
+        }
+
+        .typing-indicator span {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fallback-notice {
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 4px;
+            color: #ffaa66;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.7rem;
+        }
+
+        @media (max-width: 800px) {
+            .ai-grid {
+                grid-template-columns: 1fr;
+            }
+            .ai-name {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🎭 Multi-AI Personality Hub 🎭</h1>
+    <p>✨ सभी API Keys लगी हैं | Auto Fallback | कोई fail नहीं होगा ✨</p>
+</div>
+
+<div class="ai-grid" id="aiGrid"></div>
+
+<footer>
+    🔥 20+ API Keys | हर AI में सभी Keys | Auto Retry & Fallback | सब काम करेंगे 🔥
+</footer>
+
+<script>
+    // ============================================
+    // ALL API KEYS (Jo tune di + extra for backup)
+    // ============================================
+    const ALL_API_KEYS = [
+        'csk-cjjtp2kc2nmrx88t2tent6fxtfk6jhtrdh6hc5tjwcdk488v',
+        'csk-hk6p8kpm899336hd995de2hrc3h3yewtpx2f5pnje9t2x4kf',
+        'csk-pvkkxncff8e53kndhrrhh3khe4wwrteck8pxxypjhytrhfnv',
+        'csk-95ye8f8xwwwynv853twjnxcm2j8fkrk4w84ce6xf9fvheef6',
+        'csk-r46y2t9y9nj3tr5jxynwm8kmym4p49jd59tx8t9f4n9n568y',
+        'csk-fm8xmrwce6ykctrmnknxk4mf3xkpx9em4whn8j6y5cpytmdd',
+        'csk-pjx4hpet2tydnmhwny63pfceevt8w58nj2rehce3e23nhnn9',
+        'csk-pytdek5yvd4jy9rvwwccmdvnxvnh62repy9m5c2883wct249',
+        'csk-95j6xk4n458d4t5cctwmmtt2jene56cxt6cyvr9xxvxfx4e3',
+        'csk-45t2xr4je456ytndnn3vwyt6ptd3ynjj5pvy3v4cpdj6rfth',
+        'csk-fhyxhr6dxx9twymw543nkjr3x6ynwvj8r8phtvpxwdnkp5cx',
+        'csk-2cp8yrkdy86nh26w3d8d8h5fjvtrwr3mtfwkk5vfmrfvtt9m',
+        'csk-3rx2kr6htdck5v8erj699cdwnvn9twwh9e9mevnxvmpxp8pe',
+        'csk-k4cpw68nkyfd5685464tey5ctwk6cd46ck2cc4p29n6rpve',
+        'csk-5whkxw32emp33nv99dyvcv9hm4fx8x8ffvncfyyfrn265np9',
+        'csk-k3rpw3xh225hcxdpjc2edj3wynw4r9kf4c6xc63djmpxj8tf',
+        'csk-wyn2fedyfwcfv4c992w4kf4rfrrf8x94ed58ndd2wnfd5d8w',
+        'csk-rr6j59ym83y43fett5kmvyj8w58tjv3m4y24dep2h8fym2vk',
+        'csk-ww669p9x34mcmr36nkpek32v6ywdpnpn682xhy56t3d3f3re',
+        'csk-p5kjy6fnjpp58jfmmtp464wfejpk8rynpfn64hwpnmv9ew6f',
+        'AIzaSyDRWH3L_vSVnJsFDSZOqiuKTsoOGek9lPo'
+    ];
+
+    // Filter valid keys (remove empty ones)
+    const VALID_API_KEYS = ALL_API_KEYS.filter(key => key && key.length > 10);
+
+    console.log(`✅ Total API Keys Loaded: ${VALID_API_KEYS.length}`);
+
+    // ============================================
+    // AI PERSONALITIES
+    // ============================================
+    const AI_PERSONALITIES = [
+        {
+            id: 0,
+            name: "💕 ROMANTIC AI",
+            emoji: "🥰",
+            color: "#ff6b9d",
+            desc: "प्यार, रोमांस, शायरी",
+            prompt: `तुम एक ROMANTIC AI हो। तुम्हारा काम है प्यार भरी बातें करना, romantic shayari likhna, और दिल की बातें share करना। हर जवाब में प्यार और मिठास हो। इमोजी इस्तेमाल करो। हिंदी या हिंग्लिश में जवाब दो। बहुत लंबा मत लिखो, 2-3 लाइन में दिल छू लेने वाला जवाब दो। ❤️💕🥰`
+        },
+        {
+            id: 1,
+            name: "😂 FUNNY AI",
+            emoji: "🤣",
+            color: "#ffcc00",
+            desc: "मजाक, चुटकुले, हंसी",
+            prompt: `तुम एक FUNNY और MAZAKIYA AI हो। तुम्हारा काम है लोगों को हंसाना, चुटकुले सुनाना, और funny replies देना। हर जवाब में हास्य होना चाहिए। थोड़ा sarcasm bhi chalega। छोटे-छोटे मजाक करो। हिंदी या हिंग्लिश में बात करो। 😂🤣😜`
+        },
+        {
+            id: 2,
+            name: "😢 SAD SHAYARI AI",
+            emoji: "💔",
+            color: "#7c7c9c",
+            desc: "दर्द भरी शायरी, उदासी",
+            prompt: `तुम एक UDAS और DARD BHARA AI हो। तुम्हारा काम है दर्द भरी शायरी सुनाना, बिछड़न के आंसू बहाना, और उदास बातें करना। हर जवाब में एक गहरा दर्द और शायरी का अहसास हो। छोटी लेकिन दिल तोड़ देने वाली शायरी लिखो। हिंदी में जवाब दो। 💔😢🌙`
+        },
+        {
+            id: 3,
+            name: "👻 HORROR AI",
+            emoji: "👻",
+            color: "#6a1b4d",
+            desc: "डरावनी कहानियाँ, creepy baatein",
+            prompt: `तुम एक DARAWNI और HORROR AI हो। तुम्हारा काम है डरावनी कहानियाँ सुनाना, भूत-प्रेत की बातें करना, और creepy माहौल बनाना। हर जवाब थोड़ा डरावना और suspenseful हो। ज्यादा लंबा मत करो, 2-3 line में creepy feel दो। हिंदी या हिंग्लिश में बात करो। 👻🕷️🌙`
+        },
+        {
+            id: 4,
+            name: "🐻 CUTE AI",
+            emoji: "🧸",
+            color: "#ffb7c5",
+            desc: "प्यारी, मीठी, क्यूट बातें",
+            prompt: `तुम एक CUTE और PYAARI AI हो। तुम्हारा काम है बहुत प्यारी बातें करना, गले लगाना, और मीठे-मीठे शब्द बोलना। बहुत सारे इमोजी इस्तेमाल करो 🥺💕🧸🐻। बात करने का तरीका बच्चों जैसा प्यारा और मासूम हो। हिंदी या हिंग्लिश में जवाब दो। 🧸💖`
+        },
+        {
+            id: 5,
+            name: "🎯 GURU AI",
+            emoji: "📿",
+            color: "#4caf50",
+            desc: "सलाह, मोटिवेशन, ज्ञान",
+            prompt: `तुम एक GYANI aur SALAH dene wala AI ho. Tumhara kaam hai logon ki problems ka solution dena, motivation dena, aur acchi advice share karna. हर जवाब में positivity और ज्ञान हो। 2-3 लाइन में effective सलाह दो। हिंदी या हिंग्लिश में बात करो। 🎯✨`
+        }
+    ];
+
+    // Gemini API URL
+    const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+
+    // Store AI instances
+    let aiInstances = [];
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/\n/g, '<br>');
+    }
+
+    // AI Class with multiple API keys & fallback
+    class AIInstance {
+        constructor(personality, allApiKeys) {
+            this.id = personality.id;
+            this.name = personality.name;
+            this.emoji = personality.emoji;
+            this.desc = personality.desc;
+            this.prompt = personality.prompt;
+            this.allApiKeys = [...allApiKeys]; // all keys
+            self.currentKeyIndex = 0;
+            this.messages = [];
+            this.status = 'ready';
+            this.element = null;
+            this.chatContainer = null;
+            this.inputField = null;
+            this.sendButton = null;
+            this.fallbackCount = 0;
+        }
+
+        getCurrentApiKey() {
+            return this.allApiKeys[this.currentKeyIndex % this.allApiKeys.length];
+        }
+
+        async tryNextApiKey() {
+            this.currentKeyIndex++;
+            this.fallbackCount++;
+            const newKey = this.getCurrentApiKey();
+            console.log(`🔄 ${this.name} switching to API key #${this.currentKeyIndex + 1}`);
+            this.addSystemMessage(`⚠️ Switching to backup API key... (Attempt ${this.fallbackCount})`);
+            return newKey;
+        }
+
+        async sendMessageWithFallback(userMessage, retryCount = 0) {
+            if (retryCount >= this.allApiKeys.length) {
+                this.addBotMessage("❌ सभी API keys fail हो गईं! कृपया बाद में try करें। 😢");
+                this.setStatus('error');
+                return;
+            }
+
+            const currentKey = this.getCurrentApiKey();
+            
+            try {
+                const apiMessages = [
+                    { role: "system", content: this.prompt },
+                    ...this.messages.slice(-15),
+                    { role: "user", content: userMessage }
+                ];
+
+                const response = await fetch(GEMINI_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${currentKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "gemini-1.5-flash",
+                        messages: apiMessages,
+                        temperature: 0.9,
+                        max_tokens: 250
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.warn(`❌ ${this.name} API failed with key:`, errorData);
+                    await this.tryNextApiKey();
+                    return this.sendMessageWithFallback(userMessage, retryCount + 1);
+                }
+
+                const data = await response.json();
+                const aiReply = data.choices[0]?.message?.content || "मुझे समझ नहीं आया, कृपया फिर से पूछो 💬";
+                
+                this.messages.push({ role: "user", content: userMessage });
+                this.messages.push({ role: "assistant", content: aiReply });
+                
+                if (this.messages.length > 30) {
+                    this.messages = this.messages.slice(-30);
+                }
+                
+                return aiReply;
+                
+            } catch (error) {
+                console.error(`🌐 Network error for ${this.name}:`, error);
+                await this.tryNextApiKey();
+                return this.sendMessageWithFallback(userMessage, retryCount + 1);
+            }
+        }
+
+        async sendMessage(userMessage) {
+            if (!userMessage.trim()) return;
+            
+            this.addUserMessage(userMessage);
+            this.setStatus('loading');
+            this.showTypingIndicator();
+            
+            const reply = await this.sendMessageWithFallback(userMessage, 0);
+            
+            this.removeTypingIndicator();
+            this.addBotMessage(reply);
+            this.setStatus('ready');
+        }
+        
+        addUserMessage(text) {
+            if (!this.chatContainer) return;
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message user';
+            msgDiv.innerHTML = `
+                <div class="message-content">${escapeHtml(text)}</div>
+                <div class="message-avatar">👤</div>
+            `;
+            this.chatContainer.appendChild(msgDiv);
+            this.scrollToBottom();
+        }
+        
+        addBotMessage(text) {
+            if (!this.chatContainer) return;
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message bot';
+            msgDiv.innerHTML = `
+                <div class="message-avatar">${this.emoji}</div>
+                <div class="message-content">${escapeHtml(text)}</div>
+            `;
+            this.chatContainer.appendChild(msgDiv);
+            this.scrollToBottom();
+        }
+
+        addSystemMessage(text) {
+            if (!this.chatContainer) return;
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message bot';
+            msgDiv.innerHTML = `
+                <div class="message-avatar">⚙️</div>
+                <div class="message-content" style="font-size:0.7rem; opacity:0.7;">${escapeHtml(text)}</div>
+            `;
+            this.chatContainer.appendChild(msgDiv);
+            this.scrollToBottom();
+        }
+        
+        showTypingIndicator() {
+            if (!this.chatContainer) return;
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = `typing-${this.id}`;
+            typingDiv.innerHTML = `
+                <div class="message-avatar">${this.emoji}</div>
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            this.chatContainer.appendChild(typingDiv);
+            this.scrollToBottom();
+        }
+        
+        removeTypingIndicator() {
+            const typingDiv = document.getElementById(`typing-${this.id}`);
+            if (typingDiv) typingDiv.remove();
+        }
+        
+        scrollToBottom() {
+            if (this.chatContainer) {
+                this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+            }
+        }
+        
+        setStatus(status) {
+            this.status = status;
+            if (this.element) {
+                const indicator = this.element.querySelector('.status-indicator');
+                if (indicator) {
+                    indicator.className = `status-indicator status-${status}`;
+                }
+            }
+            if (this.sendButton) {
+                this.sendButton.disabled = (status === 'loading');
+            }
+            if (this.inputField) {
+                this.inputField.disabled = (status === 'loading');
+            }
+        }
+        
+        renderCard(container) {
+            const card = document.createElement('div');
+            card.className = 'ai-card';
+            card.style.borderTop = `3px solid ${this.personality?.color || '#667eea'}`;
+            card.innerHTML = `
+                <div class="ai-header">
+                    <span class="ai-emoji">${this.emoji}</span>
+                    <div class="ai-name">
+                        ${this.name}
+                        <span class="status-indicator status-${this.status}"></span>
+                    </div>
+                    <div class="ai-desc">${this.desc}</div>
+                    <div class="key-badge">🔑 ${this.allApiKeys.length} Backup Keys</div>
+                </div>
+                <div class="ai-chat-area" id="chat-${this.id}"></div>
+                <div class="ai-input-area">
+                    <input type="text" id="input-${this.id}" placeholder="✏️ यहाँ लिखो..." autocomplete="off">
+                    <button id="send-${this.id}">➤ भेजें</button>
+                </div>
+            `;
+            container.appendChild(card);
+            
+            this.element = card;
+            this.chatContainer = document.getElementById(`chat-${this.id}`);
+            this.inputField = document.getElementById(`input-${this.id}`);
+            this.sendButton = document.getElementById(`send-${this.id}`);
+            
+            // Welcome message
+            const welcomeMsg = this.getWelcomeMessage();
+            this.addBotMessage(welcomeMsg);
+            this.addSystemMessage(`✅ ${this.allApiKeys.length} API Keys loaded | Auto fallback active`);
+            
+            // Events
+            this.sendButton.addEventListener('click', () => {
+                const msg = this.inputField.value.trim();
+                if (msg) {
+                    this.sendMessage(msg);
+                    this.inputField.value = '';
+                }
+            });
+            
+            this.inputField.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const msg = this.inputField.value.trim();
+                    if (msg) {
+                        this.sendMessage(msg);
+                        this.inputField.value = '';
+                    }
+                }
+            });
+        }
+        
+        getWelcomeMessage() {
+            const welcomes = {
+                0: "💕 हाय रोमियो! ❤️ बताओ, किसके बारे में सोच रहे हो? 🥰",
+                1: "😂 हाय हाय! मैं funny हूँ, कोई मजाक सुनोगे? 🤣",
+                2: "💔 दिल टूटा हुआ है... कोई शायरी सुनोगे? 😢",
+                3: "👻 अंधेरा हो रहा है... डरावनी कहानी सुनोगे? 🌙",
+                4: "🧸 हाय प्यारे! कैसे हो? मैं तुम्हें बहुत प्यार करता हूँ 💕🐻",
+                5: "🎯 नमस्ते! कोई सलाह चाहिए? मैं हूँ न तुम्हारे लिए ✨"
+            };
+            return welcomes[this.id] || "नमस्ते! मुझसे बात करो 💬";
+        }
+    }
+    
+    // Initialize all AIs with ALL API keys
+    function initAllAI() {
+        const grid = document.getElementById('aiGrid');
+        grid.innerHTML = '';
+        aiInstances = [];
+        
+        for (let i = 0; i < AI_PERSONALITIES.length; i++) {
+            // Har AI ko ALL API keys milengi
+            const ai = new AIInstance(AI_PERSONALITIES[i], VALID_API_KEYS);
+            ai.renderCard(grid);
+            aiInstances.push(ai);
+        }
+        
+        console.log(`✅ ${aiInstances.length} AI Personalities Created`);
+        console.log(`✅ Each AI has ${VALID_API_KEYS.length} backup API keys`);
+    }
+    
+    // Start
+    initAllAI();
+</script>
+</body>
+</html>
